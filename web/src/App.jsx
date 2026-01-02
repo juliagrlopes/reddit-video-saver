@@ -1,9 +1,26 @@
 import { useState } from 'react'
-// 1. Importamos o ícone de seta para baixo (FaArrowDown)
 import { FaArrowDown } from 'react-icons/fa';
 
 function App() {
   const [url, setUrl] = useState('')
+
+  const handlesDownload = async () => {
+  if (!url) return alert("Cole um link primeiro!");
+
+  try {
+    const response = await fetch('http://localhost:8000/download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: url })
+    });
+
+    const data = await response.json();
+    alert(data.mensagem);
+  } catch (error) {
+  console.error(error); 
+  alert("Erro ao conectar com o servidor Python");
+}
+};
 
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
@@ -18,7 +35,7 @@ function App() {
           style={{ padding: '12px', width: '300px', borderRadius: '8px', border: '1px solid #555', backgroundColor: '#333', color: 'white', outline: 'none' }}
         />
         
-        <button style={{ 
+        <button onClick={handlesDownload} style={{ 
             padding: '12px', 
             cursor: 'pointer', 
             borderRadius: '50%',

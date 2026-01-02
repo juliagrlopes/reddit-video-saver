@@ -1,27 +1,39 @@
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import yt_dlp
 import os
 
-def baixar_video_reddit(url, pasta_destino='downloads'):
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class DownloadRequest(BaseModel):
+    url: str
+
+@app.post("/download")
+async def download_video(request: DownloadRequest):
+    pasta_destino = 'downloads'
     if not os.path.exists(pasta_destino):
         os.makedirs(pasta_destino)
 
     ydl_opts = {
         'format': 'bestvideo+bestaudio/best',
         'outtmpl': f'{pasta_destino}/%(title)s.%(ext)s',
-        'quiet': False,
     }
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
-            return {"status": "sucesso", "mensagem": "Download concluído!"}
+            ydl.download([request.url])
+        return {"status": "sucesso", "mensagem": "Download concluído no servidor!"}
     except Exception as e:
-        return {"status": "erro", "mensagem": str(e)}
-    
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
-    print("--- Reddit Video Downloader Ativado ---")
-    url_do_usuario = input("Por favor, cole a URL do post do Reddit: ")
-    
-    resultado = baixar_video_reddit(url_do_usuario)
-    
-    print(resultado["mensagem"])
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
