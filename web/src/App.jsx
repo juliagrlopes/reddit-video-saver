@@ -7,7 +7,7 @@ function App() {
   const handlesDownload = async () => {
     if (!url) return alert("Cole um link primeiro!")
     try {
-      const response = await fetch('http://localhost:8000/download', {
+      const response = await fetch('https://reddit-video-saver.onrender.com/download', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url })
