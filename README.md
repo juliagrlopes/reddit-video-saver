@@ -26,3 +26,7 @@ Um aplicativo para baixar vídeos do Reddit, desenvolvido com foco em performanc
    - `cd web`
    - `npm install`
    - `npm run dev`
+
+> **🔗 Link do Projeto:** [https://juliagrlopes.github.io/reddit-video-saver/](https://juliagrlopes.github.io/reddit-video-saver/)
+
+Nota: O backend está hospedado no Render (plano gratuito). Devido ao "modo de espera", o primeiro download após um período de inatividade pode levar cerca de 30-50 segundos para iniciar.
